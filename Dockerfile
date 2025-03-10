@@ -1,6 +1,5 @@
 FROM debian:bullseye-slim
-LABEL org.opencontainers.image.authors="Kyle Wilcox <kyle@axds.co>" \
-      org.opencontainers.image.url="https://github.com/axiom-data-science/rsync-server"
+LABEL org.opencontainers.image.source="https://github.com/KarlKKang/rsync-server"
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV NOTVISIBLE "in users profile"
