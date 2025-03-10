@@ -17,7 +17,6 @@ RUN apt-get update && \
 COPY entrypoint.sh /entrypoint.sh
 
 EXPOSE 22
-EXPOSE 873
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["rsync_server"]

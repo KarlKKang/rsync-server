@@ -1,14 +1,5 @@
 #!/bin/bash
 set -e
-# AUTHORIZED_KEYS
-USERNAME=${USERNAME:-user}
-VOLUME=${VOLUME:-/data}
-PUID=${PUID:-root}
-GUID=${GUID:-root}
-DENY=${DENY:-"*"}
-ALLOW=${ALLOW:-10.0.0.0/8 192.168.0.0/16 172.16.0.0/12 127.0.0.1/32}
-RO=${RO:-false}
-# CUSTOMCONFIG
 
 # PASSWORD (required, specified directly with PASSWORD or via file contents with PASSWORD_FILE)
 if [ -n "$PASSWORD_FILE" ]; then
@@ -62,42 +53,10 @@ setup_sshd(){
     echo "root:$PASSWORD" | chpasswd
 }
 
-setup_rsyncd(){
-    echo "$USERNAME:$PASSWORD" > /etc/rsyncd.secrets
-    chmod 0400 /etc/rsyncd.secrets
-    [ -f /etc/rsyncd.conf ] || cat > /etc/rsyncd.conf <<EOF
-log file = /dev/stderr
-timeout = 300
-max connections = 10
-port = 873
-
-[volume]
-	uid = ${PUID}
-	gid = ${GUID}
-	hosts deny = ${DENY}
-	hosts allow = ${ALLOW}
-	read only = ${RO}
-	path = ${VOLUME}
-	comment = ${VOLUME} directory
-	auth users = ${USERNAME}
-	secrets file = /etc/rsyncd.secrets
-EOF
-
-if [ ! -z "$CUSTOMCONFIG" ]; then
-    echo -e "\t${CUSTOMCONFIG}" >> /etc/rsyncd.conf
-fi
-}
-
 
 if [ "$1" = 'rsync_server' ]; then
     setup_sshd
-    exec /usr/sbin/sshd &
-    mkdir -p $VOLUME
-    setup_rsyncd
-    exec /usr/bin/rsync --no-detach --daemon --config /etc/rsyncd.conf "$@"
-else
-    setup_sshd
-    exec /usr/sbin/sshd &
+    exec /usr/sbin/sshd -D -e
 fi
 
 exec "$@"
