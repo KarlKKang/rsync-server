@@ -1,27 +1,29 @@
 # rsync-server
 
-A `rsync` server with `sshd` in Docker.
+A `rsync` server with `sshd` in Docker. Forked from [axiom-data-science/rsync-server](https://github.com/axiom-data-science/rsync-server) with the `rsyncd` daemon disabled.
 
 ## Quickstart
 
-Start a server
+Build the image and start a server:
 
 ```shell
+docker build -t rsync-server .
+
 docker run \
     --name rsync-server \
     -p 9000:22 \
     -e PASSWORD=secret \
-    axiom/rsync-server:latest
+    rsync-server
 ```
 
 ## Usage
 
-Variable options (on run)
+### Environment Variables
 
 |     Parameter     | Function |
 | :---------------: | -------- |
-| `PASSWORD`        | the `rsync` password. **One of `PASSWORD` or `PASSWORD_FILE` is required.**|
-| `PASSWORD_FILE`   | path to a file containing the `rsync` password. **One of `PASSWORD` or `PASSWORD_FILE` is required.**|
+| `PASSWORD`        | the `ssh` password. **One of `PASSWORD` or `PASSWORD_FILE` is required.**|
+| `PASSWORD_FILE`   | path to a file containing the `ssh` password. **One of `PASSWORD` or `PASSWORD_FILE` is required.**|
 | `AUTHORIZED_KEYS` | the `ssh` key (for root user). defaults empty |
 
 ### Set password via file
@@ -31,7 +33,7 @@ docker run \
     -p 9000:22 \
     -v /path/to/password_file:/password \
     -e PASSWORD_FILE=/password \
-    axiom/rsync-server:latest
+    rsync-server
 ```
 
 ### Use SSH key authentication
@@ -47,9 +49,9 @@ Alternatively, you may specify the `AUTHORIZED_KEYS` environment variable.
 ```shell
 docker run \
     -e PASSWORD=secret \
-    -v /path/to/authorized_keys:/root/.ssh/authorized_keys:
+    -v /path/to/authorized_keys:/root/.ssh/authorized_keys
     -p 9000:22 \
-    axiom/rsync-server:latest
+    rsync-server
 ```
 
 ```shell
