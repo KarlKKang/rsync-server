@@ -13,7 +13,7 @@ RUN apt-get update && \
     echo "export VISIBLE=now" >> /etc/profile && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY entrypoint.sh /entrypoint.sh
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
 EXPOSE 22
 
