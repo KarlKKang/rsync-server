@@ -7,7 +7,7 @@ A `rsync` server with `sshd` in Docker. Forked from [axiom-data-science/rsync-se
 Build the image and start a server:
 
 ```shell
-docker build -t rsync-server .
+docker build -t rsync-server --pull .
 
 docker run \
     --name rsync-server \
